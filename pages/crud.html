@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog CRUD</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h1>Blog CRUD</h1>
+
+<nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="qr.html">QR Code</a></li>
+        <li><a href="mail.html">Mail</a></li>
+        <li><a href="bmi.html">BMI</a></li>
+        <li><a href="weather.html">Weather</a></li>
+    </ul>
+</nav>
+<form id="post-form">
+    <input type="text" id="title" placeholder="Title" required>
+    <input type="text" id="topic" placeholder="Topic" required>
+    <textarea id="content" placeholder="Content" required></textarea>
+    <button type="submit" id="submit-button">Create Post</button>
+</form>
+
+<!-- Форма для поиска -->
+<h2>Search Posts</h2>
+<form id="search-form">
+    <input type="text" id="search-query" placeholder="Search by title or content">
+    <button type="submit">Search</button>
+</form>
+
+<!-- Список постов -->
+<h2>Posts</h2>
+<div id="posts-container"></div>
+
+<script>
+    let editingPostId = null; // Переменная для хранения ID редактируемого поста
+
+    // Обработчик создания/редактирования поста
+    document.getElementById("post-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const title = document.getElementById("title").value;
+        const topic = document.getElementById("topic").value;
+        const content = document.getElementById("content").value;
+
+        const url = editingPostId ? `/crud/${editingPostId}` : "/crud";
+        const method = editingPostId ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, topic, content })
+        });
+
+        if (response.ok) {
+            alert(editingPostId ? "Post updated!" : "Post created!");
+            editingPostId = null; // Сброс ID редактируемого поста
+            document.getElementById("submit-button").textContent = "Create Post"; // Возврат кнопки в исходное состояние
+            loadPosts();
+        } else {
+            alert("Error saving post.");
+        }
+    });
+
+    // Обработчик поиска
+    document.getElementById("search-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const query = document.getElementById("search-query").value;
+        const response = await fetch(`/crud/search?query=${query}`);
+        const posts = await response.json();
+        renderPosts(posts);
+    });
+
+    // Загрузка всех постов
+    async function loadPosts() {
+        const response = await fetch("/crud");
+        const posts = await response.json();
+        renderPosts(posts);
+    }
+
+    // Отображение постов
+    function renderPosts(posts) {
+        const postsContainer = document.getElementById("posts-container");
+        postsContainer.innerHTML = posts.map(post => `
+                <div class="post">
+                    <h3>${post.title} (${post.topic})</h3>
+                    <p>${post.content}</p>
+                    <button onclick="editPost('${post._id}')">Edit</button>
+                    <button onclick="deletePost('${post._id}')">Delete</button>
+                </div>
+            `).join("");
+    }
+
+    // Редактирование поста
+    async function editPost(id) {
+        const response = await fetch(`/crud/${id}`);
+        const post = await response.json();
+        document.getElementById("title").value = post.title;
+        document.getElementById("topic").value = post.topic;
+        document.getElementById("content").value = post.content;
+
+        editingPostId = id; // Установка ID редактируемого поста
+        document.getElementById("submit-button").textContent = "Update Post"; // Изменение текста кнопки
+    }
+
+    // Удаление поста
+    async function deletePost(id) {
+        const response = await fetch(`/crud/${id}`, { method: "DELETE" });
+        if (response.ok) {
+            alert("Post deleted");
+            loadPosts();
+        } else {
+            alert("Error deleting post.");
+        }
+    }
+
+    // Загрузка постов при загрузке страницы
+    loadPosts();
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="qr.html">QR Code</a></li>
+        <li><a href="mail.html">Mail</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="crud.html">Your blog bro</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <h1>BMI Calculator</h1>
+    <form id="bmi-form">
+        <input type="number" id="weight" placeholder="Weight (kg)" required>
+        <input type="number" id="height" placeholder="Height (cm)" required>
+        <button type="submit">Calculate</button>
+    </form>
+    <p id="result"></p>
+</div>
+
+<script>
+    document.getElementById("bmi-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const weight = document.getElementById("weight").value;
+        const height = document.getElementById("height").value;
+
+        try {
+            const response = await fetch("http://localhost:3000/bmi/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ weight, height }),
+            });
+
+            const data = await response.json();
+            document.getElementById("result").innerText = response.ok ? `BMI: ${data.bmi} (${data.category})` : data.error;
+        } catch (error) {
+            console.error("❌ Error:", error);
+            document.getElementById("result").innerText = "Something went wrong. Please try again.";
+        }
+    });
+</script>
+</body>
+</html>

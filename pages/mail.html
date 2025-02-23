@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Email</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="qr.html">QR Code</a></li>
+        <li><a href="bmi.html">BMI</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="crud.html">Your blog bro</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <h1>Send Email</h1>
+    <form id="email-form">
+        <input type="email" id="email" placeholder="Recipient Email" required>
+        <input type="text" id="subject" placeholder="Subject" required>
+        <textarea id="message" placeholder="Message" required></textarea>
+        <button type="submit">Send</button>
+    </form>
+    <p id="status"></p>
+</div>
+
+<script>
+    document.getElementById("email-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const subject = document.getElementById("subject").value;
+        const message = document.getElementById("message").value;
+
+        try {
+            const response = await fetch("http://localhost:3000/mail/send", {  // ✅ FULL URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, subject, message }),
+            });
+
+            const data = await response.json();
+            document.getElementById("status").innerText = response.ok ? data.message : data.error;
+        } catch (error) {
+            console.error("❌ Error:", error);
+            document.getElementById("status").innerText = "Something went wrong. Please try again.";
+        }
+    });
+
+</script>
+</body>
+</html>

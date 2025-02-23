@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Weather</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="qr.html">QR Code</a></li>
+        <li><a href="mail.html">Mail</a></li>
+        <li><a href="bmi.html">BMI</a></li>
+        <li><a href="crud.html">Your blog bro</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <h1>Weather App</h1>
+    <input type="text" id="city" placeholder="Enter City">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="weather-info" class="hidden">
+        <h2 id="location"></h2>
+        <img id="weather-icon" src="" alt="Weather Icon">
+        <p><strong>Temperature:</strong> <span id="temp"></span>°C</p>
+        <p><strong>Feels Like:</strong> <span id="feels-like"></span>°C</p>
+        <p><strong>Description:</strong> <span id="description"></span></p>
+        <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
+        <p><strong>Pressure:</strong> <span id="pressure"></span> hPa</p>
+        <p><strong>Wind Speed:</strong> <span id="wind-speed"></span> m/s</p>
+        <p><strong>Country:</strong> <span id="country"></span> <img id="flag" src="" alt="Country Flag" width="30"></p>
+        <p><strong>Air Quality Index:</strong> <span id="aqi"></span></p>
+        <iframe id="map" width="100%" height="300"></iframe>
+    </div>
+</div>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById("city").value;
+        if (!city) return alert("Please enter a city");
+
+        try {
+            const response = await fetch(`http://localhost:3000/weather/${city}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById("weather-info").classList.remove("hidden");
+
+                document.getElementById("location").innerText = `${data.city}, ${data.country}`;
+                document.getElementById("temp").innerText = data.temperature;
+                document.getElementById("feels-like").innerText = data.feels_like;
+                document.getElementById("description").innerText = data.description;
+                document.getElementById("humidity").innerText = data.humidity;
+                document.getElementById("pressure").innerText = data.pressure;
+                document.getElementById("wind-speed").innerText = data.wind_speed;
+                document.getElementById("country").innerText = data.country;
+                document.getElementById("flag").src = data.flag;
+                document.getElementById("weather-icon").src = data.icon;
+                document.getElementById("aqi").innerText = data.aqi;
+
+                document.getElementById("map").src = `https://www.google.com/maps?q=${data.lat},${data.lon}&output=embed`;
+            } else {
+                alert(data.error);
+            }
+        } catch (error) {
+            console.error("❌ Error:", error);
+            alert("Failed to fetch weather data.");
+        }
+    }
+</script>
+</body>
+</html>
