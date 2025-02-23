@@ -3,7 +3,6 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Get all users
 router.get("/users", async (req, res) => {
     try {
         const users = await User.find({}, "-password"); // Exclude password
@@ -13,7 +12,6 @@ router.get("/users", async (req, res) => {
     }
 });
 
-// Update user by ID
 router.put("/users/:id", async (req, res) => {
     try {
         const { email, role } = req.body;
@@ -31,7 +29,6 @@ router.put("/users/:id", async (req, res) => {
     }
 });
 
-// Delete user by ID
 router.delete("/users/:id", async (req, res) => {
     try {
         const { id } = req.params;

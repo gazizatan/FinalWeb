@@ -47,7 +47,6 @@
           userList.appendChild(row);
         });
 
-        // Save Updated User
         document.querySelectorAll(".save-btn").forEach(button => {
           button.addEventListener("click", async (e) => {
             const userId = e.target.dataset.id;
@@ -66,7 +65,6 @@
           });
         });
 
-        // Delete User
         document.querySelectorAll(".delete-btn").forEach(button => {
           button.addEventListener("click", async (e) => {
             const userId = e.target.dataset.id;
@@ -80,7 +78,7 @@
       }
     }
 
-    fetchUsers(); // Load users on page load
+    fetchUsers();
   });
 
 </script>

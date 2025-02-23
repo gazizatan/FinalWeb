@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 dotenv.config();
 const router = express.Router();
 
-// 📧 Email Sending Route
 router.post("/send", async (req, res) => {
     const { email, subject, message } = req.body;
 
@@ -31,7 +30,6 @@ router.post("/send", async (req, res) => {
             text: message,
         };
 
-        // Send Email
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: "Email sent successfully!" });
 

@@ -51,17 +51,14 @@
             return;
         }
 
-        // Clear previous QR code
         document.getElementById("qrcode").innerHTML = "";
 
-        // Generate new QR code
         const qr = new QRCode(document.getElementById("qrcode"), {
             text: qrText,
             width: 200,
             height: 200
         });
 
-        // Show download button
         setTimeout(() => {
             const img = document.querySelector("#qrcode img");
             if (img) {

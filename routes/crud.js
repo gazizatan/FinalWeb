@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
-// Определение схемы поста
 const PostSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
@@ -12,7 +11,6 @@ const PostSchema = new mongoose.Schema({
 
 const Post = mongoose.model("Post", PostSchema);
 
-// 📌 GET все посты с пагинацией
 router.get("/", async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -26,7 +24,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 📌 GET один пост по ID
 router.get("/:id", async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
@@ -54,7 +51,6 @@ router.get("/topic", async (req, res) => {
     }
 });
 
-// 📌 GET поиск постов по заголовку или содержанию
 router.get("/search", async (req, res) => {
     try {
         const { query } = req.query;
@@ -74,7 +70,6 @@ router.get("/search", async (req, res) => {
     }
 });
 
-// 📌 POST создание нового поста
 router.post("/", async (req, res) => {
     try {
         const { title, content, topic } = req.body;
@@ -91,7 +86,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 📌 PUT обновление поста по ID
 router.put("/:id", async (req, res) => {
     try {
         const { title, content, topic } = req.body;
@@ -116,7 +110,6 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// 📌 DELETE удаление поста по ID
 router.delete("/:id", async (req, res) => {
     try {
         const deletedPost = await Post.findByIdAndDelete(req.params.id);

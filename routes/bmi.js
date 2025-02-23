@@ -2,7 +2,6 @@ import express from "express";
 
 const router = express.Router();
 
-// 📏 BMI Calculation Route
 router.post("/calculate", (req, res) => {
     const { weight, height } = req.body;
 

@@ -39,9 +39,8 @@
 <div id="posts-container"></div>
 
 <script>
-    let editingPostId = null; // Переменная для хранения ID редактируемого поста
+    let editingPostId = null;
 
-    // Обработчик создания/редактирования поста
     document.getElementById("post-form").addEventListener("submit", async function(event) {
         event.preventDefault();
         const title = document.getElementById("title").value;
@@ -76,14 +75,14 @@
         renderPosts(posts);
     });
 
-    // Загрузка всех постов
+
     async function loadPosts() {
         const response = await fetch("/crud");
         const posts = await response.json();
         renderPosts(posts);
     }
 
-    // Отображение постов
+
     function renderPosts(posts) {
         const postsContainer = document.getElementById("posts-container");
         postsContainer.innerHTML = posts.map(post => `
@@ -96,7 +95,6 @@
             `).join("");
     }
 
-    // Редактирование поста
     async function editPost(id) {
         const response = await fetch(`/crud/${id}`);
         const post = await response.json();
@@ -108,7 +106,6 @@
         document.getElementById("submit-button").textContent = "Update Post"; // Изменение текста кнопки
     }
 
-    // Удаление поста
     async function deletePost(id) {
         const response = await fetch(`/crud/${id}`, { method: "DELETE" });
         if (response.ok) {
@@ -119,7 +116,6 @@
         }
     }
 
-    // Загрузка постов при загрузке страницы
     loadPosts();
 </script>
 </body>
