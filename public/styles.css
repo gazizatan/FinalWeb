@@ -13,24 +13,23 @@ nav {
     background-color: #ffd1dc; /* Pastel pink */
     padding: 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
     border-bottom: 2px solid #ffb6c1; /* Slightly darker pastel pink */
 }
 
-ul {
+nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    gap: 20px;
 }
 
-li {
-    margin: 0 15px;
+nav ul li {
+    margin: 0;
 }
 
-a {
+nav ul li a {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
@@ -40,62 +39,57 @@ a {
     transition: background-color 0.3s ease;
 }
 
-a:hover {
+nav ul li a:hover {
     background-color: #ff9aa2; /* Darker pastel pink for hover */
-}
-
-/* Кнопка Admin Panel */
-.admin-btn {
-    background-color: #a2d5f2; /* Pastel blue */
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    margin-left: 20px;
-}
-
-.admin-btn:hover {
-    background-color: #7fb3d5; /* Darker pastel blue for hover */
-}
-
-/* Заголовок */
-h1 {
-    color: #c8a2c8; /* Pastel purple */
-    text-align: center;
-    margin-top: 50px;
-    font-size: 3rem;
 }
 
 /* Контейнер */
 .container {
     max-width: 1100px;
-    margin: 20px auto;
+    margin: 0 auto; /* Центрирование контейнера */
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Заголовок */
+h1 {
+    color: #c8a2c8; /* Pastel purple */
+    text-align: center;
+    margin-top: 20px;
+    font-size: 3rem;
+}
+
+h2 {
+    color: #c8a2c8; /* Pastel purple */
+    margin-top: 30px;
+    font-size: 2rem;
+    text-align: center; /* Центрирование заголовков */
+}
 /* Формы и поля ввода */
 input, textarea {
     width: 100%;
-    padding: 12px;
+    padding: 8px; /* Уменьшенный padding */
     border-radius: 8px;
     border: 1px solid #c8a2c8; /* Pastel purple border */
-    margin-bottom: 15px;
-    font-size: 16px;
+    margin-bottom: 10px; /* Уменьшенный отступ */
+    font-size: 14px; /* Уменьшенный размер шрифта */
     box-sizing: border-box;
     background-color: #f8f8f8;
 }
 
+textarea {
+    resize: vertical;
+    min-height: 80px; /* Уменьшенная минимальная высота */
+}
+
 button {
     width: 100%;
-    padding: 14px;
+    padding: 10px; /* Уменьшенный padding */
     background-color: #c8a2c8; /* Pastel purple */
     color: white;
-    font-size: 16px;
+    font-size: 14px; /* Уменьшенный размер шрифта */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -106,22 +100,28 @@ button:hover {
     background-color: #b48ead; /* Darker pastel purple for hover */
 }
 
-/* Посты */
+
 .post {
     border: 1px solid #c8a2c8; /* Pastel purple border */
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
     background-color: #f8f8f8;
+    max-width: 800px; /* Ограничение ширины поста */
+    margin-left: auto; /* Центрирование поста */
+    margin-right: auto; /* Центрирование поста */
 }
 
 .post h3 {
     color: #c8a2c8; /* Pastel purple */
     margin: 0 0 10px 0;
+    text-align: center; /* Центрирование заголовка поста */
 }
 
 .post p {
     margin: 0 0 15px 0;
+    text-align: justify; /* Выравнивание текста по ширине */
+    word-wrap: break-word; /* Перенос длинных слов */
 }
 
 .post button {
@@ -133,112 +133,24 @@ button:hover {
 
 /* Мобильные стили */
 @media (max-width: 768px) {
-    nav {
+    nav ul {
         flex-direction: column;
         align-items: center;
-    }
-
-    ul {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    li {
-        margin: 10px 0;
-    }
-
-    .admin-btn {
-        margin-left: 0;
-        margin-top: 10px;
     }
 
     .container {
         padding: 15px;
     }
-}
 
-/* Стили для таблицы */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #c8a2c8; /* Pastel purple border */
-}
-
-th {
-    background-color: #c8a2c8; /* Pastel purple */
-    color: white;
-    font-weight: bold;
-}
-
-tr:hover {
-    background-color: #f8f8f8; /* Light gray background on hover */
-}
-
-/* Стили для полей ввода и выпадающих списков */
-input[type="text"], select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #c8a2c8; /* Pastel purple border */
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: #f8f8f8;
-}
-
-input[type="text"]:focus, select:focus {
-    outline: none;
-    border-color: #b48ead; /* Darker pastel purple */
-}
-
-/* Стили для кнопок */
-button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.save-btn {
-    background-color: #a2d5f2; /* Pastel blue */
-    color: white;
-}
-
-.save-btn:hover {
-    background-color: #7fb3d5; /* Darker pastel blue */
-}
-
-.delete-btn {
-    background-color: #ff9aa2; /* Pastel pink */
-    color: white;
-}
-
-.delete-btn:hover {
-    background-color: #ff7f8a; /* Darker pastel pink */
-}
-
-/* Мобильные стили */
-@media (max-width: 768px) {
-    table {
-        display: block;
-        overflow-x: auto;
+    h1 {
+        font-size: 2rem;
     }
 
-    th, td {
-        padding: 8px;
+    h2 {
+        font-size: 1.5rem;
     }
 
-    button {
-        padding: 6px 10px;
-        font-size: 12px;
+    .post {
+        max-width: 100%; /* На мобильных посты занимают всю ширину */
     }
 }
