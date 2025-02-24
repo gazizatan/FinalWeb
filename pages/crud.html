@@ -20,6 +20,8 @@
 </nav>
 <br>
 <br>
+
+<!-- Form for creating/updating posts -->
 <form id="post-form">
     <input type="text" id="title" placeholder="Title" required>
     <input type="text" id="topic" placeholder="Topic" required>
@@ -27,20 +29,24 @@
     <button type="submit" id="submit-button">Create Post</button>
 </form>
 
-<!-- Форма для поиска -->
-<h2>Search Posts</h2>
-<form id="search-form">
-    <input type="text" id="search-query" placeholder="Search by title or content">
-    <button type="submit">Search</button>
-</form>
+<!-- Form for searching posts -->
+<!--<h2>Search Posts</h2>-->
+<!--<form id="search-form">-->
+<!--    <input type="text" id="search-query" placeholder="Search by title or content">-->
+<!--    <button type="submit">Search</button>-->
+<!--    <button type="button" id="reset-button">Reset</button>-->
+<!--</form>-->
 
-<!-- Список постов -->
+<!-- Container for displaying posts -->
 <h2>Posts</h2>
 <div id="posts-container"></div>
 
 <script>
     let editingPostId = null;
 
+    document.addEventListener("DOMContentLoaded", loadPosts);
+
+    // Handle form submission for creating/updating posts
     document.getElementById("post-form").addEventListener("submit", async function(event) {
         event.preventDefault();
         const title = document.getElementById("title").value;
@@ -58,43 +64,74 @@
 
         if (response.ok) {
             alert(editingPostId ? "Post updated!" : "Post created!");
-            editingPostId = null; // Сброс ID редактируемого поста
-            document.getElementById("submit-button").textContent = "Create Post"; // Возврат кнопки в исходное состояние
+            editingPostId = null;
+            document.getElementById("submit-button").textContent = "Create Post";
+            document.getElementById("post-form").reset();
             loadPosts();
         } else {
             alert("Error saving post.");
         }
     });
 
-    // Обработчик поиска
+    // Handle search form submission
     document.getElementById("search-form").addEventListener("submit", async function(event) {
         event.preventDefault();
         const query = document.getElementById("search-query").value;
-        const response = await fetch(`/crud/search?query=${query}`);
-        const posts = await response.json();
-        renderPosts(posts);
+        if (!query) {
+            alert("Please enter a search query.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/crud/search?query=${query}`);
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            renderPosts(data);
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+            alert("An error occurred while fetching posts. Please try again.");
+        }
     });
 
+    // Reset button to reload all posts
+    document.getElementById("reset-button").addEventListener("click", function() {
+        document.getElementById("search-query").value = "";
+        loadPosts();
+    });
 
+    // Load all posts
     async function loadPosts() {
-        const response = await fetch("/crud");
-        const posts = await response.json();
-        renderPosts(posts);
+        try {
+            const response = await fetch("/crud");
+            const posts = await response.json();
+            renderPosts(posts);
+        } catch (error) {
+            console.error("Error loading posts:", error);
+        }
     }
 
-
+    // Render posts to the DOM
     function renderPosts(posts) {
         const postsContainer = document.getElementById("posts-container");
+        if (!Array.isArray(posts)) {
+            console.error("Expected an array of posts, but received:", posts);
+            postsContainer.innerHTML = "<p>No posts found or an error occurred.</p>";
+            return;
+        }
         postsContainer.innerHTML = posts.map(post => `
-                <div class="post">
-                    <h3>${post.title} (${post.topic})</h3>
-                    <p>${post.content}</p>
-                    <button onclick="editPost('${post._id}')">Edit</button>
-                    <button onclick="deletePost('${post._id}')">Delete</button>
-                </div>
-            `).join("");
+            <div class="post">
+                <h3>${post.title} (${post.topic})</h3>
+                <p>${post.content}</p>
+                <button onclick="editPost('${post._id}')">Edit</button>
+                <button onclick="deletePost('${post._id}')">Delete</button>
+            </div>
+        `).join("");
     }
 
+    // Edit a post
     async function editPost(id) {
         const response = await fetch(`/crud/${id}`);
         const post = await response.json();
@@ -102,10 +139,11 @@
         document.getElementById("topic").value = post.topic;
         document.getElementById("content").value = post.content;
 
-        editingPostId = id; // Установка ID редактируемого поста
-        document.getElementById("submit-button").textContent = "Update Post"; // Изменение текста кнопки
+        editingPostId = id;
+        document.getElementById("submit-button").textContent = "Update Post";
     }
 
+    // Delete a post
     async function deletePost(id) {
         const response = await fetch(`/crud/${id}`, { method: "DELETE" });
         if (response.ok) {
@@ -115,8 +153,6 @@
             alert("Error deleting post.");
         }
     }
-
-    loadPosts();
 </script>
 </body>
 </html>

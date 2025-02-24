@@ -67,6 +67,7 @@ h2 {
     font-size: 2rem;
     text-align: center; /* Центрирование заголовков */
 }
+
 /* Формы и поля ввода */
 input, textarea {
     width: 100%;
@@ -100,7 +101,53 @@ button:hover {
     background-color: #b48ead; /* Darker pastel purple for hover */
 }
 
+/* Кнопки с разными стилями */
+.button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
+.button.primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button.secondary {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.button.danger {
+    background-color: #f44336;
+    color: white;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+/* Таблицы */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+/* Посты */
 .post {
     border: 1px solid #c8a2c8; /* Pastel purple border */
     padding: 15px;
@@ -131,7 +178,7 @@ button:hover {
     font-size: 14px;
 }
 
-/* Мобильные стили */
+/* Стили для мобильных устройств */
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
@@ -153,4 +200,63 @@ button:hover {
     .post {
         max-width: 100%; /* На мобильных посты занимают всю ширину */
     }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    input, select, .button {
+        width: 100%;
+    }
+
+    table {
+        font-size: 14px;
+    }
+}
+
+/* Стиль для пользовательских данных */
+.user-details {
+    display: none;
+    margin-top: 30px;
+}
+
+/* Контейнер для кнопок и textarea */
+.form-container {
+    display: flex;
+    align-items: center; /* Центрирует элементы по вертикали */
+    gap: 10px; /* Отступ между textarea и кнопкой */
+}
+
+textarea {
+    resize: none; /* Отключаем изменение размера */
+    width: 80%; /* 80% ширины страницы */
+    height: 20px; /* Высота как у кнопки */
+    border-radius: 8px;
+    border: 1px solid #c8a2c8; /* Pastel purple border */
+    padding: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+button {
+    width: auto; /* Кнопка с автошириной */
+    padding: 8px 12px;
+    background-color: #c8a2c8; /* Pastel purple */
+    color: white;
+    font-size: 14px; /* Размер шрифта */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 40px; /* Высота как у textarea */
+}
+
+button:hover {
+    background-color: #b48ead; /* Darker pastel purple for hover */
+}
+
+/* Кнопка Clear снизу */
+#clearBtn {
+    margin-top: 10px;
+    width: auto;
 }

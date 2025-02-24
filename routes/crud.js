@@ -3,14 +3,17 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
+// Define the Post schema
 const PostSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     topic: { type: String, required: true }
 });
 
+// Create the Post model
 const Post = mongoose.model("Post", PostSchema);
 
+// Get all posts with pagination
 router.get("/", async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -24,6 +27,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Get a single post by ID
 router.get("/:id", async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
@@ -36,7 +40,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 📌 GET посты по теме
+// Get posts by topic
 router.get("/topic", async (req, res) => {
     try {
         const { name } = req.query;
@@ -51,25 +55,33 @@ router.get("/topic", async (req, res) => {
     }
 });
 
-router.get("/search", async (req, res) => {
-    try {
-        const { query } = req.query;
-        if (!query) {
-            return res.status(400).json({ error: "Параметр 'query' обязателен" });
-        }
+// router.get("/search", async (req, res) => {
+//     try {
+//         const { query } = req.query;
+//         if (!query) {
+//             return res.status(400).json({ error: "Параметр 'query' обязателен" });
+//         }
+//
+//         console.log("Search query:", query); // Log the query
+//
+//         // Perform the search
+//         const posts = await Post.find({
+//             $or: [
+//                 { title: { $regex: query, $options: "i" } },
+//                 { content: { $regex: query, $options: "i" } }
+//             ]
+//         });
+//
+//         console.log("Search results:", posts); // Log the results
+//
+//         res.json(posts);
+//     } catch (error) {
+//         console.error("Search error:", error); // Log the error
+//         res.status(500).json({ error: "Ошибка при поиске постов", details: error.message });
+//     }
+// });
 
-        const posts = await Post.find({
-            $or: [
-                { title: { $regex: query, $options: "i" } },
-                { content: { $regex: query, $options: "i" } }
-            ]
-        });
-        res.json(posts);
-    } catch (error) {
-        res.status(500).json({ error: "Ошибка при поиске постов" });
-    }
-});
-
+// Create a new post
 router.post("/", async (req, res) => {
     try {
         const { title, content, topic } = req.body;
@@ -86,6 +98,7 @@ router.post("/", async (req, res) => {
     }
 });
 
+// Update a post by ID
 router.put("/:id", async (req, res) => {
     try {
         const { title, content, topic } = req.body;
@@ -110,6 +123,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
+// Delete a post by ID
 router.delete("/:id", async (req, res) => {
     try {
         const deletedPost = await Post.findByIdAndDelete(req.params.id);

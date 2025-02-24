@@ -7,6 +7,37 @@
 </head>
 <body>
 <h1>Admin Panel - User Management</h1>
+
+
+<div class="form-container">
+  <textarea id="userIdInput" placeholder="Enter User ID"></textarea>
+  <button id="fetchUserBtn">Fetch User</button>
+</div>
+<button id="clearBtn">Clear</button> <!-- This will stay below -->
+
+
+<!-- Display fetched user details -->
+<div id="userDetails" style="display: none;">
+  <h2>User Details</h2>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td id="fetchedUserId"></td>
+      <td id="fetchedUserEmail"></td>
+      <td id="fetchedUserRole"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>All Users</h2>
 <table border="1">
   <thead>
   <tr>
@@ -18,10 +49,19 @@
   </thead>
   <tbody id="user-list"></tbody>
 </table>
+
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const userList = document.getElementById("user-list");
+    const userIdInput = document.getElementById("userIdInput");
+    const fetchUserBtn = document.getElementById("fetchUserBtn");
+    const clearBtn = document.getElementById("clearBtn"); // Clear Button
+    const userDetails = document.getElementById("userDetails");
+    const fetchedUserId = document.getElementById("fetchedUserId");
+    const fetchedUserEmail = document.getElementById("fetchedUserEmail");
+    const fetchedUserRole = document.getElementById("fetchedUserRole");
 
+    // Function to fetch all users
     async function fetchUsers() {
       userList.innerHTML = ""; // Clear the list before fetching
       try {
@@ -34,14 +74,14 @@
                     <td>${user._id}</td>
                     <td><input type="text" value="${user.email}" class="email-input" data-id="${user._id}"></td>
                     <td>
-                        <select class="role-select" data-id="${user._id}">
-                            <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
-                            <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
-                        </select>
+                    <select class="role-select" data-id="${user._id}">
+                        <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
+                        <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+                    </select>
                     </td>
                     <td>
-                        <button class="save-btn" data-id="${user._id}">Save</button>
-                        <button class="delete-btn" data-id="${user._id}">Delete</button>
+                    <button class="save-btn" data-id="${user._id}">Save</button>
+                    <button class="delete-btn" data-id="${user._id}">Delete</button>
                     </td>
                 `;
           userList.appendChild(row);
@@ -61,7 +101,7 @@
 
             const result = await response.json();
             alert(result.message);
-            fetchUsers(); // Refresh list
+            fetchUsers();
           });
         });
 
@@ -69,7 +109,7 @@
           button.addEventListener("click", async (e) => {
             const userId = e.target.dataset.id;
             await fetch(`/admin/users/${userId}`, { method: "DELETE" });
-            fetchUsers(); // Refresh list
+            fetchUsers();
           });
         });
 
@@ -78,9 +118,39 @@
       }
     }
 
+    fetchUserBtn.addEventListener("click", async () => {
+      const userId = userIdInput.value.trim();
+      if (!userId) {
+        alert("Please enter a valid User ID");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/users/${userId}`);
+        const user = await response.json();
+
+        if (user.error) {
+          alert(user.error);
+          userDetails.style.display = "none";
+        } else {
+          fetchedUserId.textContent = user._id;
+          fetchedUserEmail.textContent = user.email;
+          fetchedUserRole.textContent = user.role;
+          userDetails.style.display = "block";
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        alert("Error fetching user");
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      userIdInput.value = ""; // Clear input field
+      userDetails.style.display = "none"; // Hide user details
+    });
+
     fetchUsers();
   });
-
 </script>
 </body>
 </html>
