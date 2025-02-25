@@ -6,27 +6,21 @@ dotenv.config();
 const router = express.Router();
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
-router.get("/:city", async (req, res) => {
+// 📌 Get weather data by city
+router.get("/weather/:city", async (req, res) => {
     try {
-        const city = req.params.city;
+        const { city } = req.params;
+        console.log(`📍 Fetching weather for: ${city}`);
 
         const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
         const { data: weather } = await axios.get(weatherURL);
 
-        const airQualityURL = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${weather.coord.lat}&lon=${weather.coord.lon}&appid=${WEATHER_API_KEY}`;
-        const { data: air } = await axios.get(airQualityURL);
-
-        const aqi = air.list[0].main.aqi;
-        const aqiText = ["Good", "Fair", "Moderate", "Poor", "Very Poor"][aqi - 1];
-
-        const countryCode = weather.sys.country;
-        const flagURL = `https://flagcdn.com/w320/${countryCode.toLowerCase()}.png`;
-
         res.status(200).json({
             city: weather.name,
-            country: countryCode,
-            flag: flagURL,
+            country: weather.sys.country,
+            flag: `https://flagcdn.com/w320/${weather.sys.country.toLowerCase()}.png`,
             temperature: weather.main.temp,
             feels_like: weather.main.feels_like,
             description: weather.weather[0].description,
@@ -34,13 +28,28 @@ router.get("/:city", async (req, res) => {
             humidity: weather.main.humidity,
             pressure: weather.main.pressure,
             wind_speed: weather.wind.speed,
-            aqi: aqiText,
-            lat: weather.coord.lat,
-            lon: weather.coord.lon
+            lat: weather.coord.lat, // 🌍 Latitude
+            lon: weather.coord.lon  // 🌍 Longitude
         });
     } catch (error) {
-        console.error("❌ Weather API Error:", error);
+        console.error("❌ Weather API Error:", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch weather data" });
+    }
+});
+
+// 📰 Get news by country
+router.get("/news/:country", async (req, res) => {
+    try {
+        const { country } = req.params;
+        console.log(`📰 Fetching news for country: ${country}`);
+
+        const newsURL = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${NEWS_API_KEY}`;
+        const { data: news } = await axios.get(newsURL);
+
+        res.status(200).json(news.articles.slice(0, 5));
+    } catch (error) {
+        console.error("❌ News API Error:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to fetch news data" });
     }
 });
 

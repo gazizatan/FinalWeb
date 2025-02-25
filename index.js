@@ -29,6 +29,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/auth", authRoutes);
 
+app.use("/api", weatherRoutes);
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "pages", "login.html"));
 });
@@ -70,5 +72,6 @@ app.use("/admin", adminRoutes);
 app.get("/admin", (req, res) => {
     res.sendFile(path.join(__dirname, "pages", "admin.html"));
 });
+
 
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
